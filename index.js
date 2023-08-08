@@ -16,7 +16,7 @@ inputBtn.addEventListener("click", function () {
 deleteBtn.addEventListener("dblclick", function () {
     myLeads = []
     localStorage.clear()
-    renderLeads(myLeads)
+    render(myLeads)
 })
 
 function addListItemToHTML(inputText) {
@@ -30,11 +30,11 @@ function addListItemToHTML(inputText) {
     inputEl.value = ""
 }
 
-function printListFromLocalStorage() {
+function render(leads) {
     let listItems = ""
-    myLeads.forEach(lead => listItems += `
+    leads.forEach(lead => listItems += `
                                         <li>
-                                            <a target='_blank' href='//${lead}'>
+                                            <a target='_blank' href='https://${lead}'>
                                                 ${lead}
                                             </a>
                                         </li>
@@ -43,4 +43,4 @@ function printListFromLocalStorage() {
     ulEl.innerHTML = listItems
 }
 
-printListFromLocalStorage()
+render(myLeads)
