@@ -8,19 +8,16 @@ const myLeadsFromStorage = localStorage.getItem("myLeads")
 let myLeads = myLeadsFromStorage ? JSON.parse(myLeadsFromStorage) : []
 
 inputBtn.addEventListener("click", function () {
-    const inputText = inputEl.value
-    myLeads.push(inputText)
-    localStorage.setItem("myLeads", JSON.stringify(myLeads))
-    addListItemToHTML(inputText)
+    if (!inputEl.value) return
+    const url = "https://" + inputEl.value
+    addUrlToList(url);
 })
 
 tabBtn.addEventListener("click", function (){
-    let text = ""
+    let url = ""
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        text = tabs[0].url
-        myLeads.push(text)
-        localStorage.setItem("myLeads", JSON.stringify((myLeads)))
-        addListItemToHTML(text)
+        url = tabs[0].url
+        addUrlToList(url)
     })
 
 })
@@ -31,11 +28,17 @@ deleteBtn.addEventListener("dblclick", function () {
     render(myLeads)
 })
 
-function addListItemToHTML(inputText) {
+function addUrlToList(url) {
+    myLeads.push(url)
+    localStorage.setItem("myLeads", JSON.stringify(myLeads))
+    addUrlToHtml(url)
+}
+
+function addUrlToHtml(inputText) {
     const li = document.createElement("li")
     const a = document.createElement("a")
     a.textContent = inputText
-    a.setAttribute('href', `//${inputText}`)
+    a.setAttribute("href", inputText)
     a.setAttribute("target", "_blank")
     li.appendChild(a)
     ulEl.append(li)
@@ -46,7 +49,7 @@ function render(leads) {
     let listItems = ""
     leads.forEach(lead => listItems += `
                                         <li>
-                                            <a target='_blank' href='https://${lead}'>
+                                            <a target='_blank' href='${lead}'>
                                                 ${lead}
                                             </a>
                                         </li>
